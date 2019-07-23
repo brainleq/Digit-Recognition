@@ -17,8 +17,8 @@ def show_image(image):
     plt.grid(False)
     plt.show()
 
-train_images = train_images.reshape((60000, 28, 28, 1))
-test_images = test_images.reshape((10000, 28, 28, 1))
+#train_images = train_images.reshape((60000, 28, 28, 1))
+#test_images = test_images.reshape((10000, 28, 28, 1))
 
 # Scale rgb values to a range of 0 to 1 before feeding into network
 train_images = train_images/255.0
@@ -46,6 +46,7 @@ model.add(tf.keras.layers.Dense(64, activation='relu'))
 model.add(tf.keras.layers.Dense(10, activation='softmax'))
 
 print(model.summary())
+print(train_images[0])
 
 #model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 #model.fit(train_images, train_labels, epochs=5)
