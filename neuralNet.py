@@ -1,10 +1,12 @@
+from __future__ import absolute_import, division, print_function, unicode_literals
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 
 print('Tensorflow version: ' + str(tf.__version__))
-np.set_printoptions(linewidth=150)
+np.set_printoptions(linewidth=300)
 
 # train_images array of 60000 28x28 images
 # train_labels array of 60000 labels for each image
@@ -17,10 +19,15 @@ def show_image(image):
     plt.grid(False)
     plt.show()
 
-#train_images = train_images.reshape((60000, 28, 28, 1))
-#test_images = test_images.reshape((10000, 28, 28, 1))
+def train_model(checkpoint_path):
+    checkpoint_dir = os.path.dirname(checkpoint_path)
+    cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, save_weights_only=True, verbose=1)
+    model.fit(train_images, train_labels, epochs=5, validation_data=(test_images, test_labels), callbacks=[cp_callback])
 
-# Scale rgb values to a range of 0 to 1 before feeding into network
+train_images = train_images.reshape((60000, 28, 28, 1))
+test_images = test_images.reshape((10000, 28, 28, 1))
+
+# Normalize rgb values between 0 and 1
 train_images = train_images/255.0
 test_images = test_images/255.0
 
@@ -44,9 +51,13 @@ model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
 model.add(tf.keras.layers.Flatten())
 model.add(tf.keras.layers.Dense(64, activation='relu'))
 model.add(tf.keras.layers.Dense(10, activation='softmax'))
+model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-print(model.summary())
-print(train_images[0])
+checkpoint_path = 'training_1/cp.ckpt'
+#train_model(checkpoint_path)
 
-#model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-#model.fit(train_images, train_labels, epochs=5)
+model.load_weights(checkpoint_path)
+testImage = np.expand_dims(test_images[0], axis=0)
+print(np.argmax(model.predict(testImage)))
+#loss, acc = model.evaluate(test_images, test_labels)
+#print("Restored model, accuracy: {:5.2f}%".format(100*acc))

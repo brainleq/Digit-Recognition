@@ -36,10 +36,10 @@ class paint:
     def read(self):
         file = filedialog.asksaveasfilename(filetypes=[('Portable Network Graphics','*.png')])
         if file:
-            x = self.master.winfo_rootx() #+ 45
-            y = self.master.winfo_rooty() #+ 115
+            x = self.master.winfo_rootx() + self.c.winfo_x()
+            y = self.master.winfo_rooty() + self.c.winfo_y() + 41
             x1 = x + self.c.winfo_width()
-            y1 = y + self.c.winfo_height()
+            y1 = y + self.c.winfo_height() - 41
 
         coords = [x, y, x1, y1]
         print(coords)
@@ -56,5 +56,5 @@ class paint:
 
 root = Tk()
 paint(root)
-root.title('Convolutional NN Digit Classifier')
+root.title('Digit Classifier')
 root.mainloop()
