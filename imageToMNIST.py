@@ -27,15 +27,15 @@ def displayMNIST(mnist):
         for j in range(28):
             newArr[i][j]=x[0][k]
             k += 1
-
+"""
     plt.imshow(newArr, interpolation='nearest')
     plt.savefig('MNIST_IMAGE.png')
     plt.show()
     return newArr
-
+"""
 x = [convertImage('./image.png')]
 
 mnistImage = np.array(displayMNIST(x))
 mnistImage = np.expand_dims(mnistImage, axis=0)
 mnistImage = np.expand_dims(mnistImage, axis=-1)
-print(mnistImage.shape)
+#print(mnistImage.shape)

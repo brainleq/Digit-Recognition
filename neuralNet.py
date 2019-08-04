@@ -4,6 +4,7 @@ from tensorflow import keras
 import numpy as np
 import matplotlib.pyplot as plt
 import os
+import imageToMNIST as itm
 
 print('Tensorflow version: ' + str(tf.__version__))
 np.set_printoptions(linewidth=300)
@@ -23,6 +24,7 @@ def train_model(checkpoint_path):
     checkpoint_dir = os.path.dirname(checkpoint_path)
     cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, save_weights_only=True, verbose=1)
     model.fit(train_images, train_labels, epochs=5, validation_data=(test_images, test_labels), callbacks=[cp_callback])
+
 
 train_images = train_images.reshape((60000, 28, 28, 1))
 test_images = test_images.reshape((10000, 28, 28, 1))
@@ -55,9 +57,11 @@ model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=
 
 checkpoint_path = 'training_1/cp.ckpt'
 #train_model(checkpoint_path)
-
 model.load_weights(checkpoint_path)
+
 testImage = np.expand_dims(test_images[0], axis=0)
-print(np.argmax(model.predict(testImage)))
+print(itm.mnistImage)
+#print(np.argmax(model.predict(itm.mnistImage)))
+
 #loss, acc = model.evaluate(test_images, test_labels)
 #print("Restored model, accuracy: {:5.2f}%".format(100*acc))
