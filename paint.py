@@ -44,7 +44,9 @@ class Paint:
         coords = [x, y, x1, y1]
         PIL.ImageGrab.grab(coords).save('image.png')
         mnistImage = itm.convertImage('./image.png')
-        self.brain.predict_digit(mnistImage)
+        readNum = self.brain.predict_digit(mnistImage)
+        label = tk.Label(self.c, text=readNum, bd=1, relief='solid', font='Helvetica 32 bold')
+        label.place(relx=1.0, rely=1.0, anchor='se')
 
     def setup(self):
         self.c = Canvas(self.master, width=400, height=400, bg='white')
