@@ -6,10 +6,11 @@ from PIL import ImageGrab
 import neuralNet as nn
 import imageToMNIST as itm
 
-class paint:
-    def __init__(self, master, model):
+brain = nn.Network()
+class Paint:
+
+    def __init__(self, master):
         self.master = master
-        self.model = model
         self.old_x = None
         self.old_y = None
         self.setup()
@@ -44,7 +45,7 @@ class paint:
         coords = [x, y, x1, y1]
         PIL.ImageGrab.grab(coords).save('image.png')
         mnistImage = itm.convertImage('./image.png')
-        nn.predict_digit(self.model, mnistImage)
+        nn.predict_digit(mnistImage)
 
     def setup(self):
         self.c = Canvas(self.master, width=400, height=400, bg='white')
@@ -55,8 +56,7 @@ class paint:
         clear_button.place(x=0, y=0)
         read_button.place(x=220, y=0)
 
-model = nn.build_model()
 root = Tk()
-paint(root, model)
+Paint(root)
 root.title("Digit Classifier")
 root.mainloop()

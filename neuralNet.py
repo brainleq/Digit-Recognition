@@ -8,48 +8,70 @@ import os
 print('Tensorflow version: ' + str(tf.__version__))
 np.set_printoptions(linewidth=300)
 
-# train_images array of 60000 28x28 images
+"""# train_images array of 60000 28x28 images
 # train_labels array of 60000 labels for each image
 mnist = tf.keras.datasets.mnist
-(train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+(train_images, train_labels), (test_images, test_labels) = mnist.load_data()"""
 
-def show_image(image):
-    plt.imshow(image, cmap=plt.cm.binary)
-    plt.colorbar()
-    plt.grid(False)
-    plt.show()
+class Network:
+    def __init__(self):
+        self.model = self.build_model()
 
-def train_model(checkpoint_path):
-    checkpoint_dir = os.path.dirname(checkpoint_path)
-    cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, save_weights_only=True, verbose=1)
-    model.fit(train_images, train_labels, epochs=5, validation_data=(test_images, test_labels), callbacks=[cp_callback])
+    def show_image(image):
+        plt.imshow(image, cmap=plt.cm.binary)
+        plt.colorbar()
+        plt.grid(False)
+        plt.show()
 
-def build_model():
-    model = keras.Sequential()
-    model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
-    model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-    model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(tf.keras.layers.MaxPooling2D((2, 2)))
-    model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
-    model.add(tf.keras.layers.Flatten())
-    model.add(tf.keras.layers.Dense(64, activation='relu'))
-    model.add(tf.keras.layers.Dense(10, activation='softmax'))
-    model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+    def train_model(checkpoint_path):
+        # train_images array of 60000 28x28 images
+        # train_labels array of 60000 labels for each image
+        mnist = tf.keras.datasets.mnist
+        (train_images, train_labels), (test_images, test_labels) = mnist.load_data()
+        train_images = train_images.reshape((60000, 28, 28, 1))
+        test_images = test_images.reshape((10000, 28, 28, 1))
+        # Normalize rgb values between 0 and 1
+        train_images = train_images/255.0
+        test_images = test_images/255.0
 
-    checkpoint_path = 'training_1/cp.ckpt'
-    #train_model(checkpoint_path)
-    model.load_weights(checkpoint_path)
-    return model
+        checkpoint_dir = os.path.dirname(checkpoint_path)
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(checkpoint_path, save_weights_only=True, verbose=1)
+        model.fit(train_images, train_labels, epochs=5, validation_data=(test_images, test_labels), callbacks=[cp_callback])
 
-def predict_digit(model, mnistImage):
-    print(np.argmax(model.predict(mnistImage)))
+    def build_model(self):
+        model = keras.Sequential()
+        model.add(tf.keras.layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)))
+        model.add(tf.keras.layers.MaxPooling2D((2, 2)))
+        model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
+        model.add(tf.keras.layers.MaxPooling2D((2, 2)))
+        model.add(tf.keras.layers.Conv2D(64, (3, 3), activation='relu'))
+        model.add(tf.keras.layers.Flatten())
+        model.add(tf.keras.layers.Dense(64, activation='relu'))
+        model.add(tf.keras.layers.Dense(10, activation='softmax'))
+        model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-train_images = train_images.reshape((60000, 28, 28, 1))
+        checkpoint_path = 'training_1/cp.ckpt'
+        model.load_weights(checkpoint_path)
+        return model
+
+    def predict_digit(mnistImage):
+        print(np.argmax(self.model.predict(mnistImage)))
+
+
+
+
+
+
+
+
+
+"""train_images = train_images.reshape((60000, 28, 28, 1))
 test_images = test_images.reshape((10000, 28, 28, 1))
 
 # Normalize rgb values between 0 and 1
 train_images = train_images/255.0
-test_images = test_images/255.0
+test_images = test_images/255.0"""
+
 
 """# one-hot encoding: reshape labels into array with correct number stored as index
 with tf.compat.v1.Session() as sess:
