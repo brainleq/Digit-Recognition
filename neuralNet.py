@@ -54,7 +54,7 @@ class Network:
         model.load_weights(checkpoint_path)
         return model
 
-    def predict_digit(mnistImage):
+    def predict_digit(self, mnistImage):
         print(np.argmax(self.model.predict(mnistImage)))
 
 

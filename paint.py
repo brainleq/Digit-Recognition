@@ -3,13 +3,12 @@ from tkinter import ttk, colorchooser, filedialog
 import tkinter as tk
 import PIL
 from PIL import ImageGrab
-import neuralNet as nn
+from neuralNet import Network
 import imageToMNIST as itm
 
-brain = nn.Network()
 class Paint:
-
     def __init__(self, master):
+        self.brain = Network()
         self.master = master
         self.old_x = None
         self.old_y = None
@@ -45,7 +44,7 @@ class Paint:
         coords = [x, y, x1, y1]
         PIL.ImageGrab.grab(coords).save('image.png')
         mnistImage = itm.convertImage('./image.png')
-        nn.predict_digit(mnistImage)
+        self.brain.predict_digit(mnistImage)
 
     def setup(self):
         self.c = Canvas(self.master, width=400, height=400, bg='white')
