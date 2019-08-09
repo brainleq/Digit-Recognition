@@ -18,24 +18,27 @@ def convertImage(png):
     pixels = list(newImage.getdata())
     normPixels = [(255 - x) * 1.0 / 255.0 for x in pixels]
 
-    return normPixels
+    x = [normPixels]
+    mnistImage = np.array(displayMNIST(x))
+    mnistImage = np.expand_dims(mnistImage, axis=0)
+    mnistImage = np.expand_dims(mnistImage, axis=-1)
+    return mnistImage
 
 def displayMNIST(mnist):
     newArr=[[0 for d in range(28)] for y in range(28)]
     k = 0
     for i in range(28):
         for j in range(28):
-            newArr[i][j]=x[0][k]
+            newArr[i][j]=mnist[0][k]
             k += 1
-"""
     plt.imshow(newArr, interpolation='nearest')
     plt.savefig('MNIST_IMAGE.png')
-    plt.show()
+    #plt.show()
     return newArr
 """
 x = [convertImage('./image.png')]
-
 mnistImage = np.array(displayMNIST(x))
 mnistImage = np.expand_dims(mnistImage, axis=0)
 mnistImage = np.expand_dims(mnistImage, axis=-1)
+"""
 #print(mnistImage.shape)
